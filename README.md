@@ -1,46 +1,58 @@
+# Even if i love to be angry i am still a very cute koala,and everybody call me Taichung Kwai Lun-Mei or beautiful sun girl
+
 # Summary
 
-minProject
-[autoOpenGoogleSearch](requests/05beautifullsoup/opengoogleSearch/lucky.py)
+### MinProject
+* [AutoOpenGoogleSearch](python-requests/06-open-google-search/lucky.py)
 
 ### Python PyPDF2:
-* [01. PdfReader](PyPDF2/01PdfReader/pdfRead.py)
+* [01. pdf-reader](python-pypdf2/01-pdf-reader/pdf_read.py)
 
 ### Python Pillow:
-* [01. GetColor](pillow/_01getcolor.py)
-* [02. imageFormat](pillow/_02imgFormat/)
-* [02. cropImage](pillow/_03cropImg/cropImg.py) 
+* [01. get-color](01-get-color/getcolor.py)
+* [02. image-Format](02-image-format/image_format/)
+* [03. crop-image](03-crop-img/crop_image.py) 
 
 ### Python Mutithreading:
-* [01. mutithreading](mutithreading/mutithreading.py)
+* [01. mutithreading](python-mutithread/mutithreading.py)
 
-### Python Pymongo:
-* [01. insert](pymongo/_1inert.py)
-* [02. count](pymongo/_2count.py)
-* [03. datetime](pymongo/_3datetime.py)
-* [04. find](pymongo/_4find.py)
+### Python PyMongo:
+* [01. insert](py-mongo-db/insert.py)
+* [02. count](py-mongo-db/count.py)
+* [03. datetime](py-mongo-db/datetime.py)
+* [04. find](py-dbmongo-db/find.py)
+
+### Python Regex:
+* [01. basic](py-regex/01-basic/basic.py)
+* [02. group](py-regex/02-group/group.py)
+* [03. multimatch](py-regex/03-multi-match/multi_match.py)
+* [04. match](py-regex/04-match/match.py)
+
+### Python Serial:
+* [01. serial-read](python-serial-port/serial_read.py)
 
 ## Web
 
 ### Python Requests:
-* [01. basic](requests/01basic/requeststest.py)
-* [02. params](requests/02params/params.py)
-* [03. pillow](requests/03pillow/pillow.py)
-* [04. post_basic](requests/04post/postbasic/post.py)
-* [05. post_json](requests/04post/postJson/postJson.py)
-* [06. bs4 basic](requests/05beautifullsoup/basic.py)
+* [01. basic](python-requests/01-basic/requests_test.py)
+* [02. params](python-requests/02-params/params.py)
+* [03. pillow](python-requests/03-pillow/pillow.py)
+* [04. post-basic](python-requests/04-post/post-basic/post.py)
+* [05. post-json](python-requests/04-post/post-json/post_json.py)
+* [06. bs4-basic](python-requests/05-beautiful-soup/basic.py)
 
-### Python Webbrowser
-[01. mapkit](webmaplt/)
+### Python WebBrowser
+* [01. mapkit](python-web-browser/google_map_search.py)
 
 ### Python Django:
-* [01. django](django/Django.md)
+* [01. django](python-web-django/django.md)
 
 ### Python Flask:
 * [01. render-templates](python-web-flask/01-render-templates/)
 * [02. extend-layout](python-web-flask/02-extend-layout/)
-* [03. request-get-post](python-web-flask/request-get-post/app.py)
-* [blog-framework](python-web-flask/blog-framework/)
+* [03. request-get-post](python-web-flask/03-request-get-post/app.py)
+* [04. blog-framework](python-web-flask/04-blog-framework/)
+* [05. rend-templates](python-web-flask/05-render-templates/app.js)
 
 ### Python Mqtt:
 * [mqtt-pub](python-mqtt/mqtt-pub.py)
