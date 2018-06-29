@@ -1,5 +1,16 @@
 import csv
 import json
+
+import time
+import paho.mqtt.client as mqtt
+client_id = ""
+client = mqtt.Client(client_id=client_id)
+user = ""
+password = ""
+client.username_pw_set(user, password)
+client.connect("localhost")
+topic = 'plusone'
+
 csvfile = open('./laser-20180102.csv', 'r')
 fieldnames = ("program name","machine name","material name","work-center","order of processing", 
               "number of sheets","start time","finish time","process time","good","bad","status", 
@@ -24,5 +35,7 @@ for row in reader:
     })
 
 for i in range(0,2000):
+    client.publish(topic, data[i])
     print(data[i])
+    time.sleep(5)
     
