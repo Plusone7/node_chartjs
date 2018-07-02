@@ -94,6 +94,7 @@ def paser_products(productHrefList):
         yield_data.append(product_color)
         yield_data.append(product_category)
         yield_data.append(brand)
+        yield_data.append(sport[0])
         yield_data.append(gender)
         yield_data.append(product_type)
         yield_data.append(over_all_rating)
@@ -121,7 +122,7 @@ if __name__ == "__main__":
     file = open( './adidas_products_data.csv', 'w')
     csvCursor = csv.writer(file)
     csvHeader = ['id', 'model_number', 'name', 'standard_price', 'current_price'
-    , 'standard_price_no_vat', 'material', 'color', 'category', 'brand', 'gender'
+    , 'standard_price_no_vat', 'material', 'color', 'category', 'brand', 'sport', 'gender'
     , 'type', 'average_rate', 'recommendation_percentage', 'review_count', 'description_title'
     , 'description_subtitle',  'description_text', 'image_url', 'all_size', 'get_data_time']
     csvCursor.writerow(csvHeader)
