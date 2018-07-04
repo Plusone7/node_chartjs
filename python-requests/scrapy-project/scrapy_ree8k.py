@@ -3,14 +3,13 @@ import requests
 import json
 import time
 import csv
-
 def get_all_product_href(paserUrl):
     href_list =[]
     href_list_sorted = []
     url = paserUrl
     for page in range(1, int(pagesNumbers) + 1):
         print("paser : " + paserUrl )
-        response = requests.request("GET", paserUrl, headers=headers, params=params)
+        response = requests.request("GET", paserUrl, headers=headers)
         soup = BeautifulSoup(response.text,"html.parser")
         results = soup.findAll("div",{"class":"image"})
         paserUrl = url + "?start=" + str(48 * page)
@@ -22,15 +21,14 @@ def get_all_product_href(paserUrl):
     del href_list
     return href_list_sorted
 
-# get product detail data
 def paser_products(productHrefList):
-    bullets = []
     yield_data  = []
     for productHref in productHrefList:
         all_size = []
         # get product ID 
         productId = productHref.split('/',3)[3].replace('.html','')
-        # call api 'https://www.adidas.com/api/products/' <productID>
+        # print(productId)
+        # call api 'https://www.reebok.com/api/products/' <productID>
         prodocutLink =  apiUrl + productId
         response = requests.request("GET", prodocutLink , headers=headers, params='?sitePath=us&region=null')
         product_json_data = json.loads(response.text)
@@ -42,26 +40,31 @@ def paser_products(productHrefList):
             standard_price = product_json_data["pricing_information"]["standard_price"]
             current_price = product_json_data["pricing_information"]["currentPrice"]
             standard_price_no_vat = product_json_data["pricing_information"]["standard_price_no_vat"]
+
             description_title = product_json_data["product_description"]["title"]
             description_usps = product_json_data["product_description"]["usps"]
             # sometime you can't get product subtitle so 
-            try:
-                description_subtitle = product_json_data["product_description"]["subtitle"]
-            except:
-                description_subtitle = "NaN"
+            # try:
+            #     description_subtitle = product_json_data["product_description"]["subtitle"]
+            # except:
+            #     description_subtitle = None
+            
             description_text = product_json_data["product_description"]["text"]
+
             product_color = product_json_data["attribute_list"]["color"]
             product_category = product_json_data["attribute_list"]["category"]
             # brand =  product_json_data["attribute_list"]["brand"]
-            brand = 'Adidas'
+            brand = 'Reebok'
             sport =  product_json_data["attribute_list"]["sport"]
             gender = product_json_data["attribute_list"]["gender"] 
             product_type = product_json_data["attribute_list"]["productType"][0]
             image_url = product_json_data["view_list"][0]["image_url"]
         except:
             print("ERROR :::::::::::::::::::::", prodocutLink)
-        # call secound api rating data:https://www.adidas.com/api/models/<model_number>/ratings?sitePath=us&region=null
+
+             # call secound api rating data:https://www.adidas.com/api/models/<model_number>/ratings?sitePath=us&region=null
         prodocutRateLink =  ratingApi + model_number + '/ratings?sitePath=us&region=null'
+        print(prodocutLink)
         # paser json data 
         try:
             rate_response = requests.request("GET", prodocutRateLink , headers=headers)
@@ -85,6 +88,7 @@ def paser_products(productHrefList):
                     all_size.append(size["size"])
         except:
             size_avail = None
+
         yield_data.append(product_id)
         yield_data.append(model_number)
         yield_data.append(product_name)
@@ -102,7 +106,7 @@ def paser_products(productHrefList):
         yield_data.append(recommendation_percentage)
         yield_data.append(review_count)
         yield_data.append(description_title)
-        yield_data.append(description_subtitle)
+        # yield_data.append(description_subtitle)
         yield_data.append(description_text)
         yield_data.append(image_url)
         yield_data.append(all_size)
@@ -110,42 +114,44 @@ def paser_products(productHrefList):
         # print(yield_data)
         write_data_to_csv(yield_data)
         yield_data = []
-        
+
 def write_data_to_csv(yield_data):
     print(yield_data)
-    file = open( './adidas_products_data.csv', 'a')
+    file = open( './reebok_products_data.csv', 'a')
     csvCursor = csv.writer(file)
     logData = [yield_data]
     csvCursor.writerows(logData)
     file.close()
 
+
 if __name__ == "__main__":
-    file = open( './adidas_products_data.csv', 'w')
+    file = open( './reebok_products_data.csv', 'w')
     csvCursor = csv.writer(file)
     csvHeader = ['id', 'model_number', 'name', 'standard_price', 'current_price'
     , 'standard_price_no_vat', 'material', 'color', 'category', 'brand', 'sport', 'gender'
     , 'type', 'average_rate', 'recommendation_percentage', 'review_count', 'description_title'
-    , 'description_subtitle',  'description_text', 'image_url', 'all_size', 'get_data_time']
+    , 'description_text', 'image_url', 'all_size', 'get_data_time']
     csvCursor.writerow(csvHeader)
     file.close()
-
-    paserUrl =["https://www.adidas.com/us/women-new_arrivals", "https://www.adidas.com/us/men-new_arrivals"]
-    ratingApi = 'https://www.adidas.com/api/models/' #  / ratings?sitePath=us&region=null
-    apiUrl = 'https://www.adidas.com/api/products/'  # availibleApi: <model_number> /availability?sitePath=us&region=null
-    params = {"start": 0}
-    adidasusUrl = "https://www.adidas.com"
+    paserUrl =["https://www.reebok.com/us/men-apparel-new_arrivals", "https://www.reebok.com/us/women-apparel-new_arrivals"]
     headers = {
         'cache-control': "no-cache",
         'postman-token': "55359d59-a093-28b7-fbff-4d8848d99e86",
         'user-agent': "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.79 Safari/537.36"
     }
+    apiUrl = 'https://www.reebok.com/api/products/'
+    ratingApi = 'https://www.reebok.com/api/models/'
+    
     for url in paserUrl:
-        response = requests.request("GET", url, headers=headers, params=params)
+        response = requests.request("GET", url, headers=headers)
         soup = BeautifulSoup(response.text,"html.parser")
         # get product url from img tag
         results = soup.findAll("div",{"class":"image"})
         # get website pages number
         pagesNumbers = soup.find("li",{"class":"paging-total"}).text.split()[1]
+        # print(pagesNumbers)
+        # print(results)
         productHrefs =  get_all_product_href(paserUrl = url)
-        product_data = paser_products(productHrefList = productHrefs ) 
+        productDatas = paser_products(productHrefList = productHrefs ) 
+
         
