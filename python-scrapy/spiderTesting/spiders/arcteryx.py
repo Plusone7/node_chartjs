@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 # from spiderTesting.items import SpidertestingItem
 
 class ArcteryxSpider(scrapy.Spider):
+    all_product_hrefs = []
     name = 'arcteryx'
     allowed_domains = ['arcteryx.com']
     start_urls = ['https://arcteryx.com/us/en/c/mens/what-s-new',
@@ -27,6 +28,7 @@ class ArcteryxSpider(scrapy.Spider):
                 'wait':10,
             }
         )
+        
         # next_page = response.xpath('//li[@class="right-arrow"]/a/@href').extract_first()
         # yield scrapy.Request(next_page, callback = self.parse, dont_filter = True)
 
@@ -38,5 +40,20 @@ class ArcteryxSpider(scrapy.Spider):
         soup = BeautifulSoup(response.text, "lxml")
         links = soup.select('div.product-tile-inner > a.product-tile__product-link')
         for idx in range(0, len(links), 2):
-            print(links[idx]['href'])
+            # print(links[idx]['href'])
+            url = 'https://arcteryx.com' + links[idx]['href']
+            # self.all_product_hrefs.append(links[idx]['href'])
+            # print(url)
+            yield SplashRequest(
+                url,
+                self.parse_product_link,
+                endpoint='render.html',
+                args={
+                    'har': 1,
+                    'html': 1,
+                    'wait':10,
+                }
+            )
+
+    
         
