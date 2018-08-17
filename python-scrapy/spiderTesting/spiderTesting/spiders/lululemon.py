@@ -20,8 +20,9 @@ class AdidasSpider(scrapy.Spider):
         soup = BeautifulSoup(response.text, "lxml")
         page_number = int(soup.select('p.results')[0].text.replace(' items',''))
         
-        print('Total page =', (page_number/9)+1 )
-        for i in range(1, (page_number/9)+1):
+ #       print('lululemon Total Page :' int((page_number/9)+1) )
+ #       print('Please wait.......')
+        for i in range(1, int((page_number/9)+1)):
             url = str(response.url) + '?page=' + str(i)
             r = requests.get(url)
             soup = BeautifulSoup(r.text, "lxml")
@@ -38,18 +39,20 @@ class AdidasSpider(scrapy.Spider):
             
     def parse_product_link(self, product_api):
         r = requests.get(product_api)
-        print('--------------------------------')
-        print(product_api)
         products_json = json.loads(r.text)
-        attributes = products_json['data']['attributes']['product-attributes']['product-content-feature'][0]
+        attributes = products_json['data']['attributes']['product-attributes']['product-content-feature']
         summary = products_json['data']['attributes']['product-summary']
-        self.meta['Title'] = summary['title']
+        self.meta['Name'] = summary['title']
         self.meta['Size'] = summary['product-sizes']
         self.meta['Clonthing'] = summary['product-category']
         self.meta['Gender'] = summary['gender']
         self.meta['Brand'] = self.name
         self.meta['StyleNumber'] = summary['repository-id'][4:]
         self.meta['MaxPrice'] = summary['price']
+        try:
+            self.meta['Material'] = products_json['data']['attributes']['product-attributes']['product-content-fabric'][0]['fabricDescription']
+        except:
+            self.meta['Material'] = []
         try:
             self.meta['MinPrice'] = summary['product-sale-price']
         except:
@@ -60,14 +63,12 @@ class AdidasSpider(scrapy.Spider):
         for color in colors:
             self.meta['Color'].append(color['name'])
         if attributes:
-            self.meta['Sport'] = attributes['f5Features']
+            self.meta['Sport'] = attributes[0]['f5Features']
             self.meta['Feature'] =[]
-            for f in attributes['f5Features'][-2:]:
+            for f in attributes[0]['f5Features'][-2:]:
                 self.meta['Feature'].append(f['featureName'])
         
         print(self.meta)
-            
-
     
 
            

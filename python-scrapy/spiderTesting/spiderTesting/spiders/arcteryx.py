@@ -14,7 +14,7 @@ class ArcteryxSpider(scrapy.Spider):
                   'https://arcteryx.com/us/en/c/womens/what-s-new']
     product_links = []
     def parse(self, response):  
-        # print(response.url)
+        print(response.url)
         yield SplashRequest(
             response.url,
             self.get_all_product_hrefs,
@@ -39,51 +39,38 @@ class ArcteryxSpider(scrapy.Spider):
                 args={
                     'har': 1,
                     'html': 1,
-                    'wait':5,
+                    'wait':10,
                 }
             )
-
     def parse_product_link(self, response):
         sel = Selector(text=response.text, type="html")
         print(response.url)
         Colors =[]
         Bulletstmp = []
         soup = BeautifulSoup(response.text, "lxml")
-        StyleNumeber = soup.select('div.product-sizing-chart > span')[1].text
+        StyleNumeber = soup.select('div.product-sizing-chart > span')[-1].text
         B = soup.select('div.product__short-description > p')[0].text
         Bulletstmp.append(B)
-        # Descriptiontmp = soup.select('div.product__description')
-
-        # Color = soup.select('div.product-colour__thumbnail-container__name > span')
-        Color = sel.xpath('//div[@class="product-colour__thumbnail-container__name"]/span/text()').extract()
-        print(Color)
-        # for i in Color:
-        #     Colors.append(i.text)
-                
-        # product_tag = soup.select('div.product__key-features__item > h3')
-        # product_tag_content = soup.select('div.product__key-features__item > span')
-
-        # if product_tag[i].text == "Sizes:":
-        #         Sizes = product_tag_content[i].text
-        #         Size = Sizes.split(',')
-                
-        # elif product_tag[i].text == "Activity:":
-        #         #Sport有\n的問題
-        #         Sports = product_tag_content[i].text
-        #         Sport = Sports.split('/')
-        #         ArcteryxSpider.meta['Sport'] = Sport
-
+        Color = sel.xpath('//div[@class="product__key-features__item"]/span/text()').extract()[0]
+        try:
+            Sport = sel.xpath('//div[@class="product__key-features__item"]/span/text()').extract()[-1].replace('\n','').split('/')
+        except:
+            Sport = []
         self.meta['StyleNumeber'] = StyleNumeber
         self.meta['Bullets'] = Bulletstmp
-        self.meta['Color'] = Colors   
+        self.meta['Color'] = sel.xpath('//div[@class="product-colour__thumbnail-container__name"]/span/text()').extract()   
         self.meta['Description'] = sel.xpath('//div[@class="product__description"]/p/text()').extract()
         self.meta['Name'] = soup.select('div.product-name > h1')[0].text
         self.meta['Brand'] = 'Arcteryx'
         self.meta['MinPrice'] = soup.select('span.product-price__value')[0].text
         self.meta['MaxPrice'] = soup.select('span.product-price__value')[0].text
         self.meta['Gender'] = soup.find('a.breadcrumb__list-item-link > span')
-        # self.meta['Size'] = Size
-
+        self.meta['Sport'] = Sport    
+        self.meta['Size'] = sel.xpath('//div[@class="product__key-features__item"]/span/text()').extract()[0]
+        self.meta['Materail'] = sel.xpath('//div[@class="description"]/h2/text()').extract()
+        self.meta['Feature'] = []
+        self.meta['ReviewNumber'] = sel.xpath('//div[@class="product-review-summary"]/text()')
+        print(self.meta)
         
     
 

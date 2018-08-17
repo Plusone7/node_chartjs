@@ -12,7 +12,7 @@ from scrapy import log
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = 'spiderTesting'
-DOWNLOAD_DELAY = 0.25 
+DOWNLOAD_DELAY = 0.5
 SPIDER_MODULES = ['spiderTesting.spiders']
 NEWSPIDER_MODULE = 'spiderTesting.spiders'
 
@@ -25,6 +25,7 @@ DOWNLOADER_MIDDLEWARES = {
 }
 SPLASH_URL = 'http://127.0.0.1:8050/'
 SPIDER_MIDDLEWARES = {
+    'spiderTesting.middlewares.SpidertestingSpiderMiddleware': 543,
     'scrapy_splash.SplashDeduplicateArgsMiddleware': 100,
 }
 # SPLASH_URL = 'http://192.168.59.103:8050/'
@@ -35,7 +36,7 @@ HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'
 #USER_AGENT = 'spiderTesting (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -43,14 +44,17 @@ ROBOTSTXT_OBEY = True
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 1
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 
-USER_AGENT = random.choice(['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'])
-
+USER_AGENT = random.choice(['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36',
+                            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A',
+                            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
+                            ])
+                            
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
 
@@ -65,9 +69,9 @@ USER_AGENT = random.choice(['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) App
 
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
+# SPIDER_MIDDLEWARES = {
 #    'spiderTesting.middlewares.SpidertestingSpiderMiddleware': 543,
-#}
+# }
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
@@ -83,10 +87,13 @@ USER_AGENT = random.choice(['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) App
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'spiderTesting.pipelines.SpidertestingPipeline': 300,
-#}
 
+ITEM_PIPELINES = {
+   'spiderTesting.pipelines.SpidertestingPipeline': 300,
+}
+FEED_EXPORT_FIELDS = ['StyleNumber','Name','Gender','Description','Bullets',
+                    'Color','Size','Url','Brand','Material','MinPrice','MaxPrice',
+                    'ReviewNumber','AverageRating','ImageUrl']
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
@@ -107,3 +114,6 @@ USER_AGENT = random.choice(['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) App
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+# Log configuration
+LOG_LEVEL = 'INFO'
+# Minimum level to log. Available levels are: CRITICAL, ERROR, WARNING, INFO, DEBUG. For more info see Logging.
